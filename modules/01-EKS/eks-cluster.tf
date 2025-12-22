@@ -93,7 +93,6 @@ module "eks-cluster" {
   enable_cluster_creator_admin_permissions = false
 
   access_entries = {
-    # Konversi dari aws_auth_roles
     infra_admin = {
       principal_arn = aws_iam_role.infra_role.arn
       policy_associations = {
