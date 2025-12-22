@@ -72,10 +72,6 @@ variable "public_subnet_id_b" {
   description = "Public Subnet ID 2"
 }
 
-# variable "public_subnet_id_c" {
-#   description = "Public Subnet ID 2"
-# }
-
 # Private Subnet IDs
 variable "private_subnet_id_a" {
   description = "Private Subnet ID 1"
@@ -85,15 +81,6 @@ variable "private_subnet_id_b" {
   description = "Private Subnet ID 2"
 }
 
-# variable "private_subnet_eks_pod_id_a" {
-
-# }
-
-# variable "private_subnet_eks_pod_id_b" {
-
-# }
-
-
 variable "app_master_prefix" {
 
 }
@@ -101,11 +88,6 @@ variable "app_master_prefix" {
 variable "project_prefix" {
   type = string
 }
-
-
-# variable "ami_id" {
-
-# }
 
 variable "kms_cmk_arn" {
 
