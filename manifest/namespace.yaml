@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: sharingsession
+  labels:
+    app.kubernetes.io/name: sharingsession
+    app.kubernetes.io/managed-by: github-actions
+
