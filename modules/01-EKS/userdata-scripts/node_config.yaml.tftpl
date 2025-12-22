@@ -1,0 +1,16 @@
+# userdata/node_config.yaml.tftpl
+
+---
+apiVersion: node.eks.aws/v1alpha1
+kind: NodeConfig
+spec:
+  cluster:
+    name: ${cluster_name}
+    apiServerEndpoint: ${api_server_endpoint}
+    certificateAuthority: ${certificate_authority}
+  kubelet:
+    config:
+      maxPods: ${max_pods}
+    # Anda bisa menambahkan flags atau labels lain di sini jika perlu
+    # flags:
+    # - "--node-labels=project=my-project"
