@@ -127,7 +127,6 @@ module "eks" {
         }
       }
     },
-    # aws ssm get-parameters --names /aws/service/eks/optimized-ami/1.31/amazon-linux-2/recommended/image_id --query "Parameters[0].Value" --output text --region ap-southeast-3
     ### default type used for all EKS Managed Group , and the encrypting doesnt enable for default###
     eks_node_ami_id         = var.eks.node_ami_id
     eks_node_ebs_size       = var.eks.node_ebs_size
@@ -140,7 +139,6 @@ module "eks" {
     eks_managed_node_groups = {
       labs-nodegroup = {
         name = format("%s-%s-node", var.environment_apps, var.application_name)
-        #TODO: Set the EKS Dev NodeGroup Instance Type & Number of Nodes
         ami_type = "AL2023_ARM_64_STANDARD" # ARM BASE
         # ami_type = "AL2023_x86_64_STANDARD" #AMD BASE
         instance_types = [var.eks.instance_type]
@@ -175,106 +173,6 @@ module "eks" {
           # }
         ]
       }
-      # prod-nbds-nodegroup-test = {
-      #   name = format("node-test")
-      #   #TODO: Set the EKS Dev NodeGroup Instance Type & Number of Nodes
-      #   ami_type       = "AL2023_x86_64_STANDARD"
-      #   instance_types = ["t3.large"]
-      #   capacity_type  = var.eks.capacity_type # for saving plans
-
-      #   block_device_mappings = {
-      #     xvda = {
-      #       device_name = "/dev/xvda"
-      #       ebs = {
-      #         volume_size           = "50"
-      #       }
-      #     }
-      #   }
-
-      #   min_size     = var.eks.min_size
-      #   max_size     = var.eks.max_size
-      #   desired_size = var.eks.desired_size
-
-      #   # cloudinit_pre_nodeadm = [{
-      #   #   content_type = "application/node.eks.aws"
-      #   #   content      = <<-EOT
-      #   #   ---
-      #   #   apiVersion: node.eks.aws/v1alpha1
-      #   #   kind: NodeConfig
-      #   #   spec:
-      #   #     cluster:
-      #   #       name: btn-prod-nbds-eks
-      #   #       apiServerEndpoint:
-      #   #       certificateAuthority:
-      #   #       cidr:
-      #   #     kubelet:
-      #   #       config:
-      #   #         clusterDNS:
-      #   #         - 10.100.0.0/16
-      #   #         maxPods: 220
-      #   #   EOT
-      #   # }]
-
-      #   ### can define additional policies below explicitly ###
-      #   # iam_role_additional_policies = {
-      #   #   AmazonSSMManagedInstanceCore = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore",
-      #   #   CloudWatchAgentServerPolicy  = "arn:aws:iam::aws:policy/CloudWatchAgentServerPolicy",
-      #   #   #This policy is required in the Production environment (after the SSM Logging & Encrption applied by the Platform Team)
-      #   #   # lz-SSMProfilePolicy          = format("arn:aws:iam::%s:policy/lz-SSMProfilePolicy-%s", data.aws_caller_identity.current.account_id, data.aws_region.current.name)
-      #   # }
-      #   #--------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-
-      #   labels = {
-      #     family = "test-node"
-      #   }
-
-      #   taints = [
-      #     # {
-      #     #   key    = "Env"
-      #     #   value  = "Dev"
-      #     #   effect = "NO_SCHEDULE"
-      #     # }
-      #   ]
-      # }
-      ### these below example if we want define other eks manage group with define EBS Configuration ###
-      # lab-nodegroup = {
-      #   name = "eks-node-group"
-      #   #TODO: Set the EKS NFT NodeGroup Instance Type
-      #   instance_types = ["t3.small"]
-      #   capacity_type  = "ON_DEMAND"
-
-      #   min_size     = 1
-      #   max_size     = 1
-      #   desired_size = 1
-
-      #   block_device_mappings = {
-      #     xvda = {
-      #       device_name = "/dev/xvda"
-      #       ebs = {
-      #         volume_size           = ""
-      #         volume_type           = ""
-      #         iops                  = ""
-      #         throughput            = ""
-      #         encrypted             = true
-      #         kms_key_id            = "arn:aws:kms:ap-southeast-3:193983171233:key/049e4678-65d8-4c0b-b3f2-3aa3df10abe2" #data.aws_kms_key.kms_cmk_ebs.arn
-      #         delete_on_termination = true
-      #       }
-      #     }
-      #   }
-      #   labels = {
-      #     Env = "NFT"
-      #   }
-
-      #   taints = [
-      #     # {
-      #     #   key    = "Env"
-      #     #   value  = "NFT"
-      #     #   effect = "NO_SCHEDULE"
-      #     # }
-      #   ]
-      # }
-      #--------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-
     }
   }
 
@@ -285,18 +183,6 @@ module "eks" {
 
 
   cluster_security_group_additional = {
-    # bastion_access = {
-    #   protocol    = "TCP"
-    #   from_port   = 443
-    #   to_port     = 443
-    #   type        = "ingress"
-    #   description = "Allow Kubernetes API Access from Bastion"
-    #   # cidr_blocks              = 
-    #   # ipv6_cidr_blocks         = 
-    #   # prefix_list_ids          = 
-    #   # self                     = 
-    #   source_security_group_id = aws_security_group.bastion.id
-    # }
 
     vpc_access = {
       protocol    = "TCP"
@@ -325,7 +211,6 @@ module "eks" {
       type        = "ingress"
       self        = true
     }
-    # metrics-server
     ingress_cluster_4443_webhook = {
       description                   = "Cluster API to node 4443/tcp webhook"
       protocol                      = "tcp"
@@ -334,7 +219,6 @@ module "eks" {
       type                          = "ingress"
       source_cluster_security_group = true
     }
-    # prometheus-adapter
     ingress_cluster_6443_webhook = {
       description                   = "Cluster API to node 6443/tcp webhook"
       protocol                      = "tcp"
@@ -343,7 +227,6 @@ module "eks" {
       type                          = "ingress"
       source_cluster_security_group = true
     }
-    # Karpenter
     ingress_cluster_8443_webhook = {
       description                   = "Cluster API to node 8443/tcp webhook"
       protocol                      = "tcp"
@@ -352,7 +235,6 @@ module "eks" {
       type                          = "ingress"
       source_cluster_security_group = true
     }
-    # ALB controller, NGINX
     ingress_cluster_9443_webhook = {
       description                   = "Cluster API to node 9443/tcp webhook"
       protocol                      = "tcp"
@@ -369,7 +251,7 @@ module "eks" {
     #   description = "Allow Kubernetes Service Access Elasticache Redis from VPC Secondary IP"
     #   cidr_blocks = ["${var.vpc_cidr}"]
     # },
-    #test
+    #ALL-Outbound
     egress_all = {
       description      = "Allow all egress"
       protocol         = "-1"
@@ -380,27 +262,8 @@ module "eks" {
     }
 
   }
-
-  # only aws-auth ConfigMap will be used
-  authentication_mode = "API_AND_CONFIG_MAP" #"CONFIG_MAP"
-
-  #access_entries = {
-  # One access entry with a policy associated
-  #   example = {
-  #     principal_arn = "arn:aws:iam::123456789012:role/something"
-  #     policy_associations = {
-  #       example = {
-  #         policy_arn = "arn:aws:eks::aws:cluster-access-policy/AmazonEKSViewPolicy"
-  #          # access scoppe valid value: "namespace" and "cluster"
-  #          # ref: https://eksctl.io/usage/access-entries/
-  #         access_scope = {
-  #           namespaces = ["kube-system"]
-  #           type       = "namespace"
-  #         }
-  #       }
-  #     }
-  #   }
-  # }
+  
+  authentication_mode = "API_AND_CONFIG_MAP" #
 
 
   tags = {}

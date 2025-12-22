@@ -43,6 +43,6 @@ module "cidr-secondary" {
   }
 
   vpc_secondary_cidr_block         = "100.64.0.0/16"
-  vpc_secondary_cidr_subnet_blocks = ["100.64.0.0/17", "100.64.128.0/17"] # Have Spare CIDR 100.64.192.0/18
+  vpc_secondary_cidr_subnet_blocks = ["100.64.0.0/17", "100.64.128.0/17"]
   eks_cluster_name                 = "dana-jagoan-neon-eks"
 }
